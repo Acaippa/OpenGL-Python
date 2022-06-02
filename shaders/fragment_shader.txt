@@ -1,0 +1,23 @@
+# version 330
+
+in vec2 v_texture;
+in vec3 surface_normal;
+in vec3 to_light_vector;
+
+out vec4 out_color;
+
+uniform sampler2D s_texture;
+uniform vec3 light_color;
+
+void main()
+{
+
+    vec3 unit_normal =  normalize(surface_normal);
+    vec3 unit_light_vector =  normalize(to_light_vector);
+
+    float n_dot_1 = dot(unit_normal, to_light_vector);
+    float brightness = max(n_dot_1, 0.2);
+    vec3 diffuse = brightness * light_color;
+
+    out_color = vec4(diffuse, 1.0) * texture(s_texture, v_texture);
+}
