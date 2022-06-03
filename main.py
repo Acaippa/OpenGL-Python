@@ -25,7 +25,8 @@ class Game:
 		self.shader = StaticShader()
 		self.shader.create_perspective_projection(self.width, self.height)
 		self.camera = Camera(self.width, self.height)
-		self.light = self.shader.add_light([0.0, 2.0, 0.0], [1.0, 1.0, 1.0])
+		# TODO Tweak the light brightness initial multiplication variable.
+		self.light = self.shader.add_light(0.3, [0.0, 100.0, 0.0], [1.0, 1.0, 1.0])
 
 		# Reference the state that should be run in the main loop.
 		self.state = GameState(self)
@@ -78,8 +79,7 @@ class GameState:
 		self.parent = parent
 
 		# Defining an entity that will be used in the "game"
-		self.Entity = Entity("chibi.obj", self.parent.shader.get_id(), "images/me.png")
-		self.Entity1 = Entity("floor.obj", self.parent.shader.get_id(), "images/me.png")
+		self.Terrain = Entity("floor.obj", self.parent.shader.get_id(), "images/grass.png")
 
 		# Save random locations, later in the code we can reuse the mesh and draw them with different positions and or rotations. 
 		# self.pos_list = []
@@ -95,9 +95,7 @@ class GameState:
 		# for item in self.pos_list:
 		# 	self.Entity.instanced_draw(item)
 
-		self.Entity.y = -2.0
-		self.Entity.draw()
-		self.Entity1.draw()
+		self.Terrain.draw()
 
 
 		
