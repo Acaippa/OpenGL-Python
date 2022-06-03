@@ -30,30 +30,36 @@ class Renderer:
 	def get_location(self, item): # Get the location of a uniform variable in the shader.
 		return glGetUniformLocation(self.shader, item)
 
-	def store_float_at_location(self, location, item): # Upload the uniform value in the shader at the specific location.
+	def store_float_array_at_location(self, location, item): # Upload the uniform value in the shader at the specific location.
 		func = eval(f"glUniform{len(item)}f")
 		func(location, *item)
 		print(*item)
 
-	def store_int_at_location(self, location, item):
+	def store_int_array_at_location(self, location, item):
 		func = eval(f"glUniform{len(item)}i")
 		func(location, *item)
 		print(*item)
 
-	def store_float_matrix_at_location(self, location, item):
+	def store_float_at_location(self, location, item): # Upload the uniform value in the shader at the specific location.
+		glUniform1f(location, item)
+
+	def store_float_matrix_at_location(self, location, item): # Store a matrix into the shader
 		glUniformMatrix4fv(location, 1, GL_FALSE, item)
 
-	def add_light(self, vec3_pos=[0.0, 0.0, 0.0], vec3_color=[1.0, 1.0, 1.0]): # Creating a light and adding it's position and color to the vertex and fragment shader.
-		self.light = Light(vec3_pos, vec3_color)
+	def add_light(self, brightness, vec3_pos=[0.0, 0.0, 0.0], vec3_color=[1.0, 1.0, 1.0]): # Creating a light and adding it's position and color to the vertex and fragment shader.
+		self.light = Light(vec3_pos, vec3_color, brightness)
 
 		self.light_pos_loc = self.get_location("light_position")
 		self.light_color_loc = self.get_location("light_color")
+		self.light_brightness_loc = self.get_location("light_brightness")
 
 		self.light_pos = self.light.get_pos()
 		self.light_color = self.light.get_color()
+		self.light_brightness = self.light.get_brightness()
 
-		self.store_float_at_location(self.light_pos_loc, self.light_pos)
-		self.store_float_at_location(self.light_color_loc, self.light_color)
+		self.store_float_array_at_location(self.light_pos_loc, self.light_pos)
+		self.store_float_array_at_location(self.light_color_loc, self.light_color)
+		self.store_float_at_location(self.light_brightness_loc, self.light_brightness)
 
 		return self.light
 
