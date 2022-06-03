@@ -34,7 +34,8 @@ class Camera:
 
 		self.first_mouse = True
 
-		self.restrict_y = 0
+		self.restrict_y = True
+		self.pitch_restrict = 45
 
 	def get_view_matrix(self):
 		self.delta_time = (pygame.time.get_ticks() - self.delta_tick) / 50
@@ -42,6 +43,7 @@ class Camera:
 
 		return matrix44.create_look_at(self.pos, self.pos + self.front, self.up)
 
+	# Functions for not moving the camera while the cursor travels from one screen to the other.
 	def reset_x(self, x_pos):
 		reset_pos = self.screen_width - 10 if x_pos <= 2 else 10
 
@@ -76,14 +78,20 @@ class Camera:
 			self.x_offset *= self.mouse_sensitivity * self.delta_time
 			self.y_offset *= self.mouse_sensitivity * self.delta_time
 
+		# Resetting the position of the cursor.
 		elif x_pos >= self.screen_width - 2 or x_pos <= 2:
 			self.reset_x(x_pos)
 
 		elif y_pos >= self.screen_height - 2 or y_pos <= 2:
 			self.reset_y(y_pos)
 
+		# Restricting the pitch.
+		if not self.pitch - self.y_offset > self.pitch_restrict or self.pitch - self.y_offset < self.pitch_restrict * -1:
+			self.pitch -= self.y_offset
+
+		
 		self.jaw += self.x_offset
-		self.pitch -= self.y_offset
+		
 		self.update_camera_vectors()
 
 
