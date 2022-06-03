@@ -8,11 +8,14 @@ import pygame
 # Returns self.view = pyrr.matrix44.create_look_at(pyrr.Vector3([0, 0, 10]), pyrr.Vector3([0, 0, 0]), pyrr.Vector3([0, 1, 0]))
 
 class Camera:
-	def __init__(self):
+	def __init__(self, width, height):
 		self.pos = Vector3([-5.0, 0.0, 0.0])
 		self.front = Vector3([0.0, 0.0, -1.0])
 		self.up = Vector3([0.0, 1.0, 0.0])
 		self.right = Vector3([1.0, 0.0, 0.0])
+
+		self.screen_width = width
+		self.screen_height = height 
 
 		self.jaw = 0
 		self.pitch = 0
@@ -24,18 +27,61 @@ class Camera:
 
 		self.mouse_sensitivity = 0.25
 
+		self.last_x = 0
+		self.last_y = 0
+		self.x_offset = 0
+		self.y_offset = 0
+
+		self.first_mouse = True
+
 	def get_view_matrix(self):
 		self.delta_time = (pygame.time.get_ticks() - self.delta_tick) / 50
 		self.delta_tick = pygame.time.get_ticks()
 
 		return matrix44.create_look_at(self.pos, self.pos + self.front, self.up)
 
-	def process_mouse_movement(self, x_offset, y_offset):
-		x_offset *= self.mouse_sensitivity * self.delta_time
-		y_offset *= self.mouse_sensitivity * self.delta_time
+	def reset_x(self, x_pos):
+		reset_pos = self.screen_width - 3 if x_pos <= 2 else 0
 
-		self.jaw += x_offset
-		self.pitch -= y_offset
+		mouse = pygame.mouse.get_pos()
+		pygame.mouse.set_pos(reset_pos, mouse[1])
+
+		self.last_x = reset_pos
+		self.x_offset = 0
+
+	def reset_y(self, y_pos):
+		reset_pos = self.screen_height - 3 if y_pos <= 2 else 0
+
+		mouse = pygame.mouse.get_pos()
+		pygame.mouse.set_pos(mouse[0], reset_pos)
+
+		self.last_y = reset_pos
+		self.y_offset = 0
+
+	def process_mouse_movement(self, x_pos, y_pos):
+		if self.first_mouse: # Set the last position to be the current position of the mouse for the first frame.
+			self.last_x = x_pos
+			self.last_y = y_pos
+			self.first_mouse = False
+
+		if not x_pos >= self.screen_width - 2 and not x_pos <= 2 and not y_pos >= self.screen_height - 2 and not y_pos <= 2:
+			self.x_offset = x_pos - self.last_x
+			self.y_offset = y_pos - self.last_y
+
+			self.last_x = x_pos
+			self.last_y = y_pos
+
+			self.x_offset *= self.mouse_sensitivity * self.delta_time
+			self.y_offset *= self.mouse_sensitivity * self.delta_time
+
+		elif x_pos >= self.screen_width - 2 or x_pos <= 2:
+			self.reset_x(x_pos)
+
+		elif y_pos >= self.screen_height - 2 or y_pos <= 2:
+			self.reset_y(y_pos)
+
+		self.jaw += self.x_offset
+		self.pitch -= self.y_offset
 		self.update_camera_vectors()
 
 

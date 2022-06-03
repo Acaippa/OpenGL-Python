@@ -30,7 +30,7 @@ class Game:
 		self.mouse_reset_pos = 0
 
 		self.shader = StaticShader()
-		self.camera = Camera()
+		self.camera = Camera(self.width, self.height)
 		self.light = Light([0.0, 2.0, 0.0], [1.0, 1.0, 1.0])
 
 		# Setting up the lights.
@@ -49,31 +49,6 @@ class Game:
 
 		# Reference the state that should be run in the main loop.
 		self.state = GameState(self)
-
-		# Set these values in order to make the calculations for the mouse offset work.
-		self.first_mouse = True
-		self.last_x = self.width // 2
-		self.last_y = self.height // 2
-
-	def mouse_look(self, x_pos, y_pos): # Calculate the offset of the mouse and send it to the camera.
-		if self.first_mouse:
-			self.last_x = x_pos
-			self.last_y = y_pos
-			self.first_mouse = False
-
-		if not self.mouse_reset: # Check if the mouse is moving from one side of the screen to the other, if so do not apply any offset.
-			self.x_offset = x_pos - self.last_x
-			self.y_offset = y_pos - self.last_y
-
-			self.last_x = x_pos
-			self.last_y = y_pos
-		else:
-			self.x_offset = 0
-			self.last_x = self.mouse_reset_pos
-			self.mouse_reset = False
-
-		self.camera.process_mouse_movement(self.x_offset, self.y_offset)
-
 
 	def change_view_matrix(self, matrix): # Update the view matrix gotten from the camera entity.
 		self.view_loc = glGetUniformLocation(self.shader.get_id(), "view")
@@ -115,20 +90,8 @@ class Game:
 
 			# View and camera logic.
 			mouse_pos = pygame.mouse.get_pos()
-			self.mouse_look(mouse_pos[0], mouse_pos[1])
-			# Makes you able to look 360 degrees.
-			if mouse_pos[0] <= 0:
-				self.mouse_reset = True
-				self.mouse_reset_pos = self.width
-				pygame.mouse.set_pos((self.width - 2, mouse_pos[1]))
-
-			if mouse_pos[0] >= self.width - 1:
-				self.mouse_reset = True
-				self.mouse_reset_pos = 0
-				pygame.mouse.set_pos((1, mouse_pos[1]))
-
+			self.camera.process_mouse_movement(mouse_pos[0], mouse_pos[1])
 			self.change_view_matrix(self.camera.get_view_matrix())
-
 
 			self.clock.tick(60)
 			pygame.display.flip()
