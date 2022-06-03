@@ -20,14 +20,7 @@ class Game:
 		self.display = pygame.display.set_mode((self.width, self.height), pygame.OPENGL | pygame.DOUBLEBUF)
 		self.clock = pygame.time.Clock()
 		self.delta_tick = pygame.time.get_ticks()
-		pygame.mouse.set_visible(True)
-		pygame.event.set_grab(True)
-
-		# Center the mouse
-		mouse = pygame.mouse.get_pos()
-		pygame.mouse.set_pos(self.width // 2, self.height // 2)
-		self.mouse_reset = False
-		self.mouse_reset_pos = 0
+		pygame.mouse.set_cursor((8,8),(1,1),(0,0,0,0,0,0,0,0),(0,0,0,0,0,0,0,0))
 
 		self.shader = StaticShader()
 		self.camera = Camera(self.width, self.height)
