@@ -4,9 +4,10 @@ import numpy as np
 
 
 class Light:
-	def __init__(self, pos, color):
+	def __init__(self, pos, color, brightness):
 		self.position = np.array(pos)
 		self.color = color
+		self.brightness = 0.03 * brightness
 
 	def get_pos(self):
 		return self.position
@@ -19,3 +20,10 @@ class Light:
 
 	def set_color(self, color):
 		self.color = color
+
+	def get_brightness(self):
+		return self.brightness
+
+	def set_brightness(self, brightness):
+		self.brightness = brightness
+
