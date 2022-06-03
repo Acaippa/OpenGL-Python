@@ -43,7 +43,7 @@ class Camera:
 		return matrix44.create_look_at(self.pos, self.pos + self.front, self.up)
 
 	def reset_x(self, x_pos):
-		reset_pos = self.screen_width - 4 if x_pos <= 2 else 0
+		reset_pos = self.screen_width - 10 if x_pos <= 2 else 10
 
 		mouse = pygame.mouse.get_pos()
 		pygame.mouse.set_pos(reset_pos, mouse[1])
@@ -52,7 +52,7 @@ class Camera:
 		self.x_offset = 0
 
 	def reset_y(self, y_pos):
-		reset_pos = self.screen_height + 4 if y_pos <= 2 else 3
+		reset_pos = self.screen_height - 10 if y_pos <= 2 else 10
 
 		mouse = pygame.mouse.get_pos()
 		pygame.mouse.set_pos(mouse[0], reset_pos)
@@ -84,7 +84,6 @@ class Camera:
 
 		self.jaw += self.x_offset
 		self.pitch -= self.y_offset
-		print(self.pitch)
 		self.update_camera_vectors()
 
 
