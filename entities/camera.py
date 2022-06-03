@@ -25,7 +25,7 @@ class Camera:
 		self.delta_tick = 1 
 		self.delta_time = 1
 
-		self.mouse_sensitivity = 0.25
+		self.mouse_sensitivity = 0.10
 
 		self.last_x = 0
 		self.last_y = 0
@@ -35,7 +35,15 @@ class Camera:
 		self.first_mouse = True
 
 		self.restrict_y = True
-		self.pitch_restrict = 45
+		self.pitch_restrict = 70
+
+		self.restrict_cursor(True)
+
+		# Center the mouse
+		mouse = pygame.mouse.get_pos()
+		pygame.mouse.set_pos(self.screen_width // 2, self.screen_height // 2)
+		self.mouse_reset = False
+		self.mouse_reset_pos = 0
 
 	def get_view_matrix(self):
 		self.delta_time = (pygame.time.get_ticks() - self.delta_tick) / 50
@@ -43,24 +51,14 @@ class Camera:
 
 		return matrix44.create_look_at(self.pos, self.pos + self.front, self.up)
 
-	# Functions for not moving the camera while the cursor travels from one screen to the other.
-	def reset_x(self, x_pos):
-		reset_pos = self.screen_width - 10 if x_pos <= 2 else 10
+	def reset_mouse_pos(self):
+		if self.restrict_cursor_bool:
+			pygame.mouse.set_pos(self.screen_width // 2, self.screen_height // 2)
 
-		mouse = pygame.mouse.get_pos()
-		pygame.mouse.set_pos(reset_pos, mouse[1])
-
-		self.last_x = reset_pos
-		self.x_offset = 0
-
-	def reset_y(self, y_pos):
-		reset_pos = self.screen_height - 10 if y_pos <= 2 else 10
-
-		mouse = pygame.mouse.get_pos()
-		pygame.mouse.set_pos(mouse[0], reset_pos)
-
-		self.last_y = reset_pos
-		self.y_offset = 0
+			self.last_x = self.screen_width // 2
+			self.x_offset = 0
+			self.last_y = self.screen_height // 2
+			self.y_offset = 0
 
 	def process_mouse_movement(self, x_pos, y_pos):
 		if self.first_mouse: # Set the last position to be the current position of the mouse for the first frame.
@@ -75,24 +73,19 @@ class Camera:
 			self.last_x = x_pos
 			self.last_y = y_pos
 
-			self.x_offset *= self.mouse_sensitivity * self.delta_time
-			self.y_offset *= self.mouse_sensitivity * self.delta_time
-
-		# Resetting the position of the cursor.
-		elif x_pos >= self.screen_width - 2 or x_pos <= 2:
-			self.reset_x(x_pos)
-
-		elif y_pos >= self.screen_height - 2 or y_pos <= 2:
-			self.reset_y(y_pos)
+			self.x_offset *= self.mouse_sensitivity
+			self.y_offset *= self.mouse_sensitivity
 
 		# Restricting the pitch.
-		if not self.pitch - self.y_offset > self.pitch_restrict or self.pitch - self.y_offset < self.pitch_restrict * -1:
+		if not self.pitch - self.y_offset > self.pitch_restrict and not self.pitch - self.y_offset < self.pitch_restrict * -1:
 			self.pitch -= self.y_offset
 
-		
 		self.jaw += self.x_offset
-		
-		self.update_camera_vectors()
+
+		if self.restrict_cursor_bool: # The camera should not move while the cursor is not restricted.
+			self.update_camera_vectors()
+
+		self.reset_mouse_pos()
 
 
 	def update_camera_vectors(self):
@@ -117,3 +110,7 @@ class Camera:
 
 		if type == "left":
 			self.pos -= self.right * self.speed * self.delta_time
+
+	def restrict_cursor(self, bool):
+		self.restrict_cursor_bool = bool
+		pygame.event.set_grab(bool)
