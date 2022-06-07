@@ -31,20 +31,6 @@ class Game:
 		# Reference the state that should be run in the main loop.
 		self.state = GameState(self)
 
-	def camera_movement(self, keys):
-		if keys[pygame.K_w]:
-				self.camera.process_keyboard("forward")
-
-		if keys[pygame.K_s]:
-			self.camera.process_keyboard("backward")
-
-		if keys[pygame.K_d]:
-				self.camera.process_keyboard("right")
-
-		if keys[pygame.K_a]:
-			self.camera.process_keyboard("left")
-
-
 	def run(self):
 		self.running = True
 
@@ -54,7 +40,7 @@ class Game:
 					self.running = False
 
 			keys = pygame.key.get_pressed()
-			self.camera_movement(keys)
+			self.camera.camera_movement(keys)
 			if keys[pygame.K_ESCAPE]:
 				self.running = False
 
@@ -96,9 +82,6 @@ class GameState:
 		# 	self.Entity.instanced_draw(item)
 
 		self.Terrain.draw()
-
-
-		
 
 
 

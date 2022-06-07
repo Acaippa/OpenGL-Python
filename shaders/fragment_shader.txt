@@ -12,7 +12,6 @@ uniform float light_brightness;
 
 void main()
 {
-
     vec3 unit_normal =  normalize(surface_normal);
     vec3 unit_light_vector = normalize(to_light_vector);
 

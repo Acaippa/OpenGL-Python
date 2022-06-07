@@ -114,3 +114,16 @@ class Camera:
 	def restrict_cursor(self, bool):
 		self.restrict_cursor_bool = bool
 		pygame.event.set_grab(bool)
+
+	def camera_movement(self, keys):
+			if keys[pygame.K_w]:
+					self.process_keyboard("forward")
+
+			if keys[pygame.K_s]:
+				self.process_keyboard("backward")
+
+			if keys[pygame.K_d]:
+					self.process_keyboard("right")
+
+			if keys[pygame.K_a]:
+				self.process_keyboard("left")
