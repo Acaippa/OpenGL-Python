@@ -25,8 +25,7 @@ class Game:
 		self.shader = StaticShader()
 		self.shader.create_perspective_projection(self.width, self.height)
 		self.camera = Camera(self.width, self.height)
-		# TODO Tweak the light brightness initial multiplication variable.
-		self.light = self.shader.add_light(0.3, [0.0, 100.0, 0.0], [1.0, 1.0, 1.0])
+		self.light = self.shader.add_light(1.0, [0.0, 100.0, 0.0], [1.0, 1.0, 1.0])
 
 		# Reference the state that should be run in the main loop.
 		self.state = GameState(self)

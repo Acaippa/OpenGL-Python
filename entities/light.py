@@ -7,7 +7,7 @@ class Light:
 	def __init__(self, pos, color, brightness):
 		self.position = np.array(pos)
 		self.color = color
-		self.brightness = 0.03 * brightness
+		self.brightness = 0.01 * brightness
 
 	def get_pos(self):
 		return self.position
