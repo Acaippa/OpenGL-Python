@@ -16,10 +16,10 @@ out vec3 to_light_vector;
 
 void main()
 {
-    transformation_matrix = model * vec4(a_position, 1.0)
+    vec4 transformation_matrix = model * vec4(a_position, 1.0);
     gl_Position = projection * view * transformation_matrix;
     v_texture = a_texture;
 
-    surface_normal = (transformation_matrix).xyz;
-    to_light_vector = light_position - (transformation_matrix).xyz;
+    surface_normal = (model * vec4(a_normal, 0.0)).xyz;
+    to_light_vector = light_position - transformation_matrix.xyz;
 }
