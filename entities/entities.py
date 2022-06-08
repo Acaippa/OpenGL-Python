@@ -7,7 +7,7 @@ import math
 import numpy
 
 class Entity:
-	def __init__(self, obj_file, shader, texture):
+	def __init__(self, obj_file, shader, texture="images/me.png"):
 		self.model_mesh, self.model_buffer = ObjLoader.load_model(obj_file)
 		self.VAO = glGenVertexArrays(1)
 		self.VBO = glGenBuffers(1)

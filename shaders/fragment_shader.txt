@@ -3,12 +3,14 @@
 in vec2 v_texture;
 in vec3 surface_normal;
 in vec3 to_light_vector;
+in float visibility;
 
 out vec4 out_color;
 
 uniform sampler2D s_texture;
 uniform vec3 light_color;
 uniform float light_brightness;
+uniform vec3 sky_color;
 
 void main()
 {
@@ -20,4 +22,5 @@ void main()
     vec3 diffuse = brightness * light_color;
 
     out_color = vec4(diffuse, 1.0) * texture(s_texture, v_texture);
+    out_color = mix(vec4(sky_color, 1.0), out_color, visibility);
 }

@@ -12,14 +12,24 @@ uniform vec3 light_position;
 out vec2 v_texture;
 out vec3 surface_normal;
 out vec3 to_light_vector;
+out float visibility;
+
+// The fog "updates" every vertecis, so make sure the terrain mesh has enough of them or else the fog wont work.
+const float density = 0.005;
+const float gradient = 1.5;
 
 
 void main()
 {
     vec4 transformation_matrix = model * vec4(a_position, 1.0);
-    gl_Position = projection * view * transformation_matrix;
+    vec4 position_relative_to_cam = view * transformation_matrix;
+    gl_Position = projection * position_relative_to_cam;
     v_texture = a_texture;
 
     surface_normal = (model * vec4(a_normal, 0.0)).xyz;
     to_light_vector = light_position - transformation_matrix.xyz;
+
+    float distance = length(position_relative_to_cam.xyz);
+    visibility = exp(-pow((distance*density), gradient));
+    visibility = clamp(visibility, 0.0, 1.0);
 }

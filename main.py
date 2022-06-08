@@ -65,6 +65,7 @@ class GameState:
 
 		# Defining an entity that will be used in the "game"
 		self.Terrain = Entity("floor.obj", self.parent.shader.get_id(), "images/grass.png")
+		self.cube = Entity("chibi.obj", self.parent.shader.get_id())
 
 		# Save random locations, later in the code we can reuse the mesh and draw them with different positions and or rotations. 
 		# self.pos_list = []
@@ -81,6 +82,7 @@ class GameState:
 		# 	self.Entity.instanced_draw(item)
 
 		self.Terrain.draw()
+		self.cube.draw()
 
 
 

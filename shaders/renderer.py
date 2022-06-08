@@ -63,7 +63,7 @@ class Renderer:
 
 		return self.light
 
-	def create_perspective_projection(self, width, height, fov=45, close=0.1, far=100):
+	def create_perspective_projection(self, width, height, fov=45, close=0.1, far=1000):
 		self.projection = matrix44.create_perspective_projection_matrix(fov, width / height, close, far)
 		self.proj_loc = self.get_location("projection")
 		self.store_float_matrix_at_location(self.proj_loc, self.projection)
@@ -72,12 +72,22 @@ class Renderer:
 		self.view_loc = glGetUniformLocation(self.shader, "view")
 		glUniformMatrix4fv(self.view_loc, 1, GL_FALSE, matrix)
 
+	def load_sky_color(self, r, g, b):
+		self.fog_loc = self.get_location("sky_color")
+		self.store_float_array_at_location(self.fog_loc, Vector3(np.array((r, g, b))))
+
 
 class StaticShader(Renderer):
 	def __init__(self):
 		super().__init__("shaders/vertex_shader.txt", "shaders/fragment_shader.txt")
 
+		self.red = 0.2
+		self.green = 0.2
+		self.blue = 0.2
+
+		super().load_sky_color(self.red, self.green, self.blue)
+
 	def prepare(self):
-		glClearColor(0.2, 0.2, 0.2, 1)
+		glClearColor(self.red, self.green, self.blue, 1)
 		glClear(GL_COLOR_BUFFER_BIT)
 		glClear(GL_DEPTH_BUFFER_BIT)
