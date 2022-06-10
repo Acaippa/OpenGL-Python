@@ -65,7 +65,7 @@ class Game:
 			self.camera.process_mouse_movement(mouse_pos[0], mouse_pos[1])
 			self.shader.change_view_matrix(self.camera.get_view_matrix())
 
-			# TODO: add a mouse picking module that can convert 3d mouse coordinates over to 3d coordinates.
+			# TODO: add a mouse picking module that can convert 3d mouse coordinates over to 3d coordinates
 
 			self.clock.tick(60)
 			pygame.display.flip()
