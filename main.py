@@ -20,7 +20,7 @@ class Game:
 		self.clock = pygame.time.Clock()
 		self.delta_tick = pygame.time.get_ticks()
 		# Make the cursor insivible. This should be changed later so we can controll if we want to see the cursor or not.
-		pygame.mouse.set_cursor((8,8),(1,1),(0,0,0,0,0,0,0,0),(0,0,0,0,0,0,0,0))
+		#pygame.mouse.set_cursor((8,8),(1,1),(0,0,0,0,0,0,0,0),(0,0,0,0,0,0,0,0))
 
 		self.shader = StaticShader()
 		self.shader.create_perspective_projection(self.width, self.height)
@@ -32,6 +32,7 @@ class Game:
 
 	def run(self):
 		self.running = True
+		self.mouse_locked = False
 
 		while self.running:
 			for event in pygame.event.get():
@@ -39,6 +40,15 @@ class Game:
 					self.running = False
 
 			keys = pygame.key.get_pressed()
+			if keys[pygame.K_e] and self.mouse_locked == True:
+				self.mouse_locked = False
+				self.camera.restrict_cursor(False)
+
+			elif keys[pygame.K_e] and self.mouse_locked == False:
+				self.mouse_locked = True
+				self.camera.restrict_cursor(True)
+
+
 			self.camera.camera_movement(keys)
 			if keys[pygame.K_ESCAPE]:
 				self.running = False
@@ -54,6 +64,8 @@ class Game:
 			mouse_pos = pygame.mouse.get_pos()
 			self.camera.process_mouse_movement(mouse_pos[0], mouse_pos[1])
 			self.shader.change_view_matrix(self.camera.get_view_matrix())
+
+			# TODO: add a mouse picking module that can convert 3d mouse coordinates over to 3d coordinates.
 
 			self.clock.tick(60)
 			pygame.display.flip()
