@@ -76,6 +76,9 @@ class Renderer:
 		self.fog_loc = self.get_location("sky_color")
 		self.store_float_array_at_location(self.fog_loc, Vector3(np.array((r, g, b))))
 
+	def get_projection_matrix(self):
+		return self.projection
+
 
 class StaticShader(Renderer):
 	def __init__(self):

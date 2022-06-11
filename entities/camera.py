@@ -46,9 +46,6 @@ class Camera:
 		self.mouse_reset_pos = 0
 
 	def get_view_matrix(self):
-		self.delta_time = (pygame.time.get_ticks() - self.delta_tick) / 50
-		self.delta_tick = pygame.time.get_ticks()
-
 		return matrix44.create_look_at(self.pos, self.pos + self.front, self.up)
 
 	def reset_mouse_pos(self):

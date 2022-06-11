@@ -56,7 +56,6 @@ class Entity:
 		glBindVertexArray(self.VAO)
 		glBindTexture(GL_TEXTURE_2D, self.texture)
 		# glDrawElements(GL_TRIANGLES, self.model_buffer.itemsize, GL_UNSIGNED_INT, 0)
-		glDrawArrays(GL_TRIANGLES, 0, len(self.model_mesh))
 
 		self.model = pyrr.matrix44.create_from_translation([self.x, self.y, self.z])
 
@@ -71,3 +70,5 @@ class Entity:
 		self.model = pyrr.matrix44.multiply(self.model, self.rotation_z)
 
 		glUniformMatrix4fv(self.model_loc, 1, GL_FALSE, self.model)
+		# Make sure this is here or else the wrong entity moves for some reason.
+		glDrawArrays(GL_TRIANGLES, 0, len(self.model_mesh))
