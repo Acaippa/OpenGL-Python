@@ -32,19 +32,37 @@ class Game:
 
 	def run(self):
 		self.running = True
-		self.mouse_locked = False
+		# Check for both states because with only one state check the toggle function wont work.
+		self.mouse_locked_check = True
+		self.mouse_free_check = False
+		self.mouse_locked = True
 
 		while self.running:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.running = False
 
+			# TODO: move into camera model.
+
+			mouse_pos = pygame.mouse.get_pos()
 			keys = pygame.key.get_pressed()
+
+			# Un-restrict the mouse.
 			if keys[pygame.K_e] and self.mouse_locked == True:
+				self.mouse_free_check = True
+
+			if keys[pygame.K_e] == False and self.mouse_free_check == True:
+				self.mouse_free_check = False
 				self.mouse_locked = False
+				# Restrict the cursor here or else the camera will jump when the mouse returns to the center of the screen.
 				self.camera.restrict_cursor(False)
 
-			elif keys[pygame.K_e] and self.mouse_locked == False:
+			# Restrict the mouse.
+			if keys[pygame.K_e] and self.mouse_locked == False:
+				self.mouse_locked_check = True
+
+			if keys[pygame.K_e] == False and self.mouse_locked_check == True:
+				self.mouse_locked_check = False
 				self.mouse_locked = True
 				self.camera.restrict_cursor(True)
 
@@ -61,7 +79,6 @@ class Game:
 			self.state.run()
 
 			# View and camera logic.
-			mouse_pos = pygame.mouse.get_pos()
 			self.camera.process_mouse_movement(mouse_pos[0], mouse_pos[1])
 			self.shader.change_view_matrix(self.camera.get_view_matrix())
 

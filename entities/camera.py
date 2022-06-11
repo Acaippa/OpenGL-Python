@@ -76,13 +76,13 @@ class Camera:
 			self.x_offset *= self.mouse_sensitivity
 			self.y_offset *= self.mouse_sensitivity
 
-		# Restricting the pitch.
-		if not self.pitch - self.y_offset > self.pitch_restrict and not self.pitch - self.y_offset < self.pitch_restrict * -1:
-			self.pitch -= self.y_offset
-
-		self.jaw += self.x_offset
-
 		if self.restrict_cursor_bool: # The camera should not move while the cursor is not restricted.
+			# Restricting the pitch.
+			if not self.pitch - self.y_offset > self.pitch_restrict and not self.pitch - self.y_offset < self.pitch_restrict * -1:
+				self.pitch -= self.y_offset
+
+			self.jaw += self.x_offset
+
 			self.update_camera_vectors()
 
 		self.reset_mouse_pos()
