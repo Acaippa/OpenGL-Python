@@ -40,7 +40,6 @@ class Entity:
 		self.model_loc = glGetUniformLocation(self.shader, "model")
 
 
-
 	def instanced_draw(self, *args, **kwargs):
 		model = pyrr.matrix44.create_from_translation(vec3_pos)
 		rotation_x = pyrr.matrix44.create_from_x_rotation(math.radians(vec3_rot[0]))
@@ -50,6 +49,10 @@ class Entity:
 		glUniformMatrix4fv(self.model_loc, 1, GL_FALSE, model)
 
 		self.draw()
+
+	def get_boundries(self):
+		list_ = [list(self.model_buffer[i*8:i*8+3]) for i in range(len(self.model_buffer) // 8)]
+		return max(list_), min(list_)
 
 
 	def draw(self):
