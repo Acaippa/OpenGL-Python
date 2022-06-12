@@ -44,5 +44,5 @@ class MousePicker:
 		y = mouse_y / display.get_height()
 		return (x, y)
 
-	#TODO: Figur out a way to check if the ray intersects wth any object.
+	#TODO: Figure out a way to check if the ray intersects wth any object.
 
