@@ -4,6 +4,7 @@ from shaders.renderer import*
 from entities.entities import*
 from entities.camera import*
 from modules.mouse_picker import*
+from modules.ray import*
 import pyrr
 import random
 
@@ -46,7 +47,7 @@ class Game:
 					self.running = False
 
 			# TODO: move into camera model.
-
+ 
 			mouse_pos = pygame.mouse.get_pos()
 			keys = pygame.key.get_pressed()
 
@@ -109,15 +110,17 @@ class GameState:
 		self.parent.shader.prepare()
 		self.dt = self.parent.delta_time
 
-
-		#self.cube.x, self.cube.y, self.cube.z = self.parent.picker.get_current_ray()
 		# Example of how to reuse the mesh without making alot of instances of the same mesh.
 		# for item in self.pos_list:
 		# 	self.Entity.instanced_draw(item)
 
 		self.terrain.draw()
 		self.cube.draw()
-
+		self.mouse = pygame.mouse.get_pos()
+		width = self.parent.width
+		height = self.parent.height
+		self.ray = Ray(self.parent.camera.get_position(), self.parent.picker.get_current_ray(), 1000)
+		print(self.parent.picker.get_current_ray())
 
 
 game = Game(1280, 720)

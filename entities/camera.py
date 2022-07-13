@@ -15,7 +15,9 @@ class Camera:
 		self.right = Vector3([1.0, 0.0, 0.0])
 
 		self.screen_width = width
-		self.screen_height = height 
+		self.screen_height = height
+
+		self.far = 1000
 
 		self.jaw = 0
 		self.pitch = 0
@@ -124,3 +126,6 @@ class Camera:
 
 			if keys[pygame.K_a]:
 				self.process_keyboard("left")
+
+	def get_position(self):
+		return self.pos + self.front
